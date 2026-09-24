@@ -1,11 +1,12 @@
-﻿using System;
+﻿using How.Data;
+using System;
 
-namespace How.Data
+namespace How.Models
 {
     public enum AttackType
     {
-        Physical, // ใช้ P.Atk 
-        Magic     // ใช้ M.Atk 
+        Physical, // ใช้ P.Atk โจมตี (นักดาบ, นักธนู ฯลฯ)
+        Magic     // ใช้ M.Atk โจมตี (นักเวท ฯลฯ)
     }
 
     // สเตตัสโตที่ผู้เล่นแจกแต้มได้ (STR/INT/VIT/DEX/LUX/CRT)
@@ -24,7 +25,7 @@ namespace How.Data
     {
         PAtk,
         MAtk,
-        AllAtk,   // ปรับทั้ง PAtk และ MAtk พร้อมกัน (การ์ด "เพิ่ม ALL.ATK")
+        AllAtk,   // ปรับทั้ง PAtk และ MAtk พร้อมกัน
         MaxHp,
         Speed,
         CritRate,
@@ -41,29 +42,23 @@ namespace How.Data
         public bool IsMiss;
     }
 
-    /// <summary>
-    /// ตัวละครหนึ่งตัว (ทั้งฝั่งพันธมิตรและศัตรู)
-    /// ใช้ระบบ Speed Gauge แบบ ATB คล้าย 7 Knights
-    /// สเตตัสสุดท้าย (Final Stat) = สเตตัสฐาน (Base) + โบนัสจากแต้มโต (Growth) แล้วค่อยรวมโบนัสจาก Card/Item ทับบน Base อีกที
-    /// Card (UpgradeCard) ปรับ Base แบบถาวร ส่วน Item (จากหน้า Rest) ปรับ Base แบบถอดออกได้ (Equip/Unequip)
-    /// </summary>
     public class Character
     {
         public string Name;
         public bool IsEnemy;
 
-        // ---------- สเตตัสฐาน (Base) : ปรับถาวรได้จาก Card, ใช้เป็นฐานคำนวณ Final Stat ทุกครั้ง ----------
+        // ---------- สเตตัสฐาน (Base) ----------
         private int _baseMaxHp;
         private int _baseSpeed;
         private int _basePAtk;
         private int _baseMAtk;
         private int _basePDef;
         private int _baseMDef;
-        private float _baseAccuracy;   // % โอกาสตีโดน (0-100)
-        private float _baseCritRate;   // % โอกาสคริติคอล (0-100)
-        private float _baseCritDamage; // % ดาเมจโบนัสตอนคริ (เช่น 50 = คริแล้วแรงขึ้น 50%)
+        private float _baseAccuracy;
+        private float _baseCritRate;
+        private float _baseCritDamage;
 
-        // ---------- แต้มโต (Growth) : ผู้เล่นแจกแต้มหลังผ่านด่านได้ ----------
+        // ---------- แต้มโต (Growth) ----------
         public int STR;
         public int INT;
         public int VIT;
@@ -71,15 +66,9 @@ namespace How.Data
         public int LUX;
         public int CRT;
 
-        // ---------- Level/Exp: ตัวละครแต่ละคนโตแยกกัน จบด่านได้ Exp เข้าตัวเอง เลเวลอัพแล้วได้แต้มโตของตัวเอง ----------
-        public int Level { get; private set; } = 1;
-        public int Exp { get; private set; }
-        public int UpgradePoints { get; private set; } // แต้มโตที่ยังไม่ได้ใช้ (เฉพาะของตัวละครนี้คนเดียว)
+        public int UpgradePoints { get; set; }
 
-        public const int ExpPerLevel = 100;   // Exp ที่ต้องใช้เพื่อเลเวลอัพ 1 ระดับ
-        public const int PointsPerLevelUp = 3; // แต้มโตที่ได้ต่อการเลเวลอัพ 1 ครั้ง
-
-        // ---------- สเตตัสสุดท้าย (คำนวณจาก Base + Growth ทุกครั้งที่ Recalculate) ----------
+        // ---------- สเตตัสสุดท้าย ----------
         public int MaxHp { get; private set; }
         public int Speed { get; private set; }
         public int PAtk { get; private set; }
@@ -90,19 +79,15 @@ namespace How.Data
         public float CritRate { get; private set; }
         public float CritDamage { get; private set; }
 
-        public int Hp; // เลือดปัจจุบัน
-
+        public int Hp;
         public AttackType Type;
 
-        public float Gauge;          // เกจสะสมความเร็ว
-        public const float GaugeMax = 1000f; // เกณฑ์ที่ต้องถึงเพื่อโจมตี
+        public float Gauge;
+        public const float GaugeMax = 1000f;
 
-        // ---------- ไอเทมที่สวมใส่อยู่ (หน้า Rest) : สวมได้ทีละ 1 ชิ้น ถอดแล้วสเตตัสกลับเหมือนก่อนสวม ----------
+        // ไอเท็มที่สวมใส่อยู่
         public Item EquippedItem { get; private set; }
-        private StatKind _equippedItemStat;
-        private float _equippedItemDelta; // เก็บ "ค่าจริง" ที่ถูกบวกเข้าไปตอนสวม (หน่วยตรงๆ) ไว้หักออกให้แม่นยำตอนถอด
 
-        // ตัวคูณสเตตัสต่อ 1 แต้มโต (ปรับ balance ได้ตรงนี้จุดเดียว)
         private const float StrToPAtk = 4f;
         private const float IntToMAtk = 4f;
         private const float IntToMDef = 2f;
@@ -121,7 +106,7 @@ namespace How.Data
             _basePAtk = pAtk;
             _baseMAtk = mAtk;
             _basePDef = pDef;
-            _baseMDef = mDef == 0 ? pDef : mDef; // ถ้าไม่ระบุ M.Def ให้ใช้ค่าเดียวกับ P.Def ไปก่อน
+            _baseMDef = mDef == 0 ? pDef : mDef;
             _baseAccuracy = accuracy;
             _baseCritRate = critRate;
             _baseCritDamage = critDamage;
@@ -136,9 +121,6 @@ namespace How.Data
 
         public bool IsAlive => Hp > 0;
 
-        /// <summary>
-        /// อัพเดตเกจความเร็วต่อเฟรม คืนค่า true ถ้าเกจเต็มแล้ว (พร้อมโจมตี)
-        /// </summary>
         public bool TickGauge(float deltaSeconds)
         {
             if (!IsAlive) return false;
@@ -151,41 +133,94 @@ namespace How.Data
             return false;
         }
 
-        // คำนวณสเตตัสสุดท้ายใหม่ทั้งหมดจาก Base + แต้มโต เรียกทุกครั้งที่ Base หรือ Growth เปลี่ยน
+        // คำนวณสเตตัสสุดท้ายใหม่ทั้งหมด
         public void RecalculateStats()
         {
-            MaxHp = _baseMaxHp + (int)(VIT * VitToHp);
-            Speed = _baseSpeed;
-            PAtk = _basePAtk + (int)(STR * StrToPAtk);
-            MAtk = _baseMAtk + (int)(INT * IntToMAtk);
-            PDef = _basePDef + (int)(VIT * VitToPDef);
-            MDef = _baseMDef + (int)(INT * IntToMDef);
-            Accuracy = Math.Min(100f, _baseAccuracy + DEX * DexToAccuracy);
-            CritRate = Math.Min(100f, _baseCritRate + LUX * LuxToCritRate);
-            CritDamage = _baseCritDamage + CRT * CrtToCritDamage;
+            int hpCalc = _baseMaxHp + (int)(VIT * VitToHp);
+            int speedCalc = _baseSpeed;
+            int pAtkCalc = _basePAtk + (int)(STR * StrToPAtk);
+            int mAtkCalc = _baseMAtk + (int)(INT * IntToMAtk);
+            int pDefCalc = _basePDef + (int)(VIT * VitToPDef);
+            int mDefCalc = _baseMDef + (int)(INT * IntToMDef);
+            float accCalc = Math.Min(100f, _baseAccuracy + DEX * DexToAccuracy);
+            float critRateCalc = Math.Min(100f, _baseCritRate + LUX * LuxToCritRate);
+            float critDmgCalc = _baseCritDamage + CRT * CrtToCritDamage;
 
-            if (MaxHp < 1) MaxHp = 1;
+            // ประมวลผลโบนัสจากไอเท็มที่สวมใส่
+            if (EquippedItem != null)
+            {
+                void ApplyStat(StatKind kind, float amount, bool isPercent)
+                {
+                    switch (kind)
+                    {
+                        case StatKind.PAtk: pAtkCalc = isPercent ? (int)(pAtkCalc * (1 + amount)) : pAtkCalc + (int)amount; break;
+                        case StatKind.MAtk: mAtkCalc = isPercent ? (int)(mAtkCalc * (1 + amount)) : mAtkCalc + (int)amount; break;
+                        case StatKind.MaxHp: hpCalc = isPercent ? (int)(hpCalc * (1 + amount)) : hpCalc + (int)amount; break;
+                        case StatKind.Speed: speedCalc = isPercent ? (int)(speedCalc * (1 + amount)) : speedCalc + (int)amount; break;
+                        case StatKind.CritRate: critRateCalc = isPercent ? critRateCalc * (1 + amount) : critRateCalc + amount; break;
+                        case StatKind.CritDamage: critDmgCalc = isPercent ? critDmgCalc * (1 + amount) : critDmgCalc + amount; break;
+                        case StatKind.Accuracy: accCalc = isPercent ? accCalc * (1 + amount) : accCalc + amount; break;
+                        case StatKind.PDef: pDefCalc = isPercent ? (int)(pDefCalc * (1 + amount)) : pDefCalc + (int)amount; break;
+                        case StatKind.MDef: mDefCalc = isPercent ? (int)(mDefCalc * (1 + amount)) : mDefCalc + (int)amount; break;
+                    }
+                }
+
+                // 1. สเตตัสหลัก
+                ApplyStat(EquippedItem.Stat, EquippedItem.Amount, EquippedItem.IsPercent);
+
+                // 2. สเตตัสรอง
+                if (EquippedItem.SecondaryAmount != 0 || EquippedItem.SecondaryStat != default(StatKind))
+                {
+                    ApplyStat(EquippedItem.SecondaryStat, EquippedItem.SecondaryAmount, EquippedItem.SecondaryIsPercent);
+                }
+
+                // 3. สเตตัสที่สาม
+                if (EquippedItem.TertiaryAmount != 0 || EquippedItem.TertiaryStat != default(StatKind))
+                {
+                    ApplyStat(EquippedItem.TertiaryStat, EquippedItem.TertiaryAmount, EquippedItem.TertiaryIsPercent);
+                }
+
+                // เงื่อนไขพิเศษและโบนัสตามสเตตัส
+                if (EquippedItem.Name == "Ancient Katana" && STR > 20)
+                {
+                    pAtkCalc = (int)(pAtkCalc * 1.14f);
+                }
+                else if (EquippedItem.Name == "Ancient Staff" && INT > 20)
+                {
+                    mAtkCalc = (int)(mAtkCalc * 1.14f);
+                }
+                else if (EquippedItem.Name == "Demon Eye" && critRateCalc > 30)
+                {
+                    critRateCalc += 100f;
+                }
+                else if (EquippedItem.Name == "Strongest Protection Necklace")
+                {
+                    float vitBonus = VIT * 0.013f;
+                    pAtkCalc = (int)(pAtkCalc * (1 + vitBonus));
+                    mAtkCalc = (int)(mAtkCalc * (1 + vitBonus));
+                }
+                else if (EquippedItem.Name == "Ring of Legendary Hero" && critRateCalc > 50)
+                {
+                    critRateCalc += 50f;
+                    critDmgCalc += 50f;
+                }
+            }
+
+            MaxHp = Math.Max(1, hpCalc);
+            Speed = Math.Max(1, speedCalc);
+            PAtk = pAtkCalc;
+            MAtk = mAtkCalc;
+            PDef = pDefCalc;
+            MDef = mDefCalc;
+            Accuracy = Math.Min(100f, accCalc);
+            CritRate = Math.Min(100f, critRateCalc);
+            CritDamage = critDmgCalc;
+
             if (Hp > MaxHp) Hp = MaxHp;
         }
 
-        // เพิ่ม Exp ให้ตัวละครนี้ (เรียกตอนจบด่าน) เลเวลอัพได้หลายระดับพร้อมกันถ้า Exp เกินหลายเท่า
-        public void AddExp(int amount)
+        public void ApplyGrowthPoint(GrowthStat stat)
         {
-            if (amount <= 0) return;
-            Exp += amount;
-            while (Exp >= ExpPerLevel)
-            {
-                Exp -= ExpPerLevel;
-                Level++;
-                UpgradePoints += PointsPerLevelUp;
-            }
-        }
-
-        // ใช้แต้มโต 1 แต้มลงสเตตัสที่เลือก แล้วคำนวณใหม่ทันที ต้องมีแต้มโตของตัวเองเหลือพอ (คืน false ถ้าไม่มีแต้ม)
-        public bool ApplyGrowthPoint(GrowthStat stat)
-        {
-            if (UpgradePoints <= 0) return false;
-
             switch (stat)
             {
                 case GrowthStat.STR: STR++; break;
@@ -195,13 +230,9 @@ namespace How.Data
                 case GrowthStat.LUX: LUX++; break;
                 case GrowthStat.CRT: CRT++; break;
             }
-            UpgradePoints--;
             RecalculateStats();
-            return true;
         }
 
-        // ใช้โดย Card/Item: ปรับสเตตัส "ฐาน" (ทั้งแบบ % และแบบหน่วยตรงๆ) แล้วคำนวณใหม่
-        // isPercent=true คือปรับเป็น % ของค่าฐานปัจจุบัน (เช่น +15% หรือ -20%), false คือบวก/ลบเป็นหน่วยตรงๆ
         public void ModifyBaseStat(StatKind kind, float amount, bool isPercent)
         {
             switch (kind)
@@ -244,60 +275,26 @@ namespace How.Data
             RecalculateStats();
         }
 
-        // อ่านค่าสเตตัส "ฐาน" ดิบๆ ตาม StatKind (ใช้ภายในสำหรับคำนวณ delta ตอนสวม/ถอดไอเทม)
-        private float GetBaseStatValue(StatKind kind)
-        {
-            switch (kind)
-            {
-                case StatKind.PAtk: return _basePAtk;
-                case StatKind.MAtk: return _baseMAtk;
-                case StatKind.MaxHp: return _baseMaxHp;
-                case StatKind.Speed: return _baseSpeed;
-                case StatKind.CritRate: return _baseCritRate;
-                case StatKind.CritDamage: return _baseCritDamage;
-                case StatKind.Accuracy: return _baseAccuracy;
-                case StatKind.PDef: return _basePDef;
-                case StatKind.MDef: return _baseMDef;
-                default: return 0f; // AllAtk ไม่รองรับสำหรับไอเทม (ใช้ได้เฉพาะการ์ด)
-            }
-        }
-
-        // สวมไอเทม 1 ชิ้น (ถอดของเดิมออกก่อนอัตโนมัติถ้ามี) แล้วบวกโบนัสเข้า Base
-        // เก็บ delta จริงที่ถูกบวกไว้ เพื่อให้ถอดออกภายหลังได้แม่นยำ ไม่ว่าไอเทมจะเป็น % หรือหน่วยตรงๆ
         public void EquipItem(Item item)
         {
             if (item == null) return;
-            if (EquippedItem != null)
-                UnequipItem();
-
-            float before = GetBaseStatValue(item.Stat);
-            ModifyBaseStat(item.Stat, item.Amount, item.IsPercent);
-            float after = GetBaseStatValue(item.Stat);
-
-            _equippedItemStat = item.Stat;
-            _equippedItemDelta = after - before;
             EquippedItem = item;
+            RecalculateStats();
         }
 
-        // ถอดไอเทมที่สวมอยู่ออก คืนสเตตัสฐานกลับไปเท่าก่อนสวม
         public void UnequipItem()
         {
             if (EquippedItem == null) return;
-            ModifyBaseStat(_equippedItemStat, -_equippedItemDelta, isPercent: false);
             EquippedItem = null;
-            _equippedItemDelta = 0f;
+            RecalculateStats();
         }
 
-        // ลด HP ปัจจุบันเป็น % (ใช้โดยการ์ดที่แลกเลือดกับพลัง เช่น "ลด HP 90%")
         public void ReduceCurrentHpPercent(float percent)
         {
             int amount = (int)(MaxHp * (percent / 100f));
-            Hp = Math.Max(1, Hp - amount); // กันไม่ให้การ์ดฆ่าตัวละครตายทันที เหลืออย่างน้อย 1 HP
+            Hp = Math.Max(1, Hp - amount);
         }
 
-        /// <summary>
-        /// คำนวณผลการโจมตีใส่เป้าหมาย: เช็คโอกาสพลาด (Accuracy) ก่อน แล้วค่อยเช็คคริติคอล (CritRate/CritDamage)
-        /// </summary>
         public AttackResult CalculateAttack(Character target, Random rng)
         {
             if (rng.NextDouble() * 100 > Accuracy)
@@ -305,6 +302,12 @@ namespace How.Data
 
             int atkStat = Type == AttackType.Physical ? PAtk : MAtk;
             int defStat = Type == AttackType.Physical ? target.PDef : target.MDef;
+
+            // ตรวจสอบเงื่อนไข Dragon Mail (Ignore Def 90%)
+            if (EquippedItem != null && EquippedItem.Name == "Dragon Mail")
+            {
+                defStat = (int)(defStat * 0.1f);
+            }
 
             int baseDamage = atkStat - (int)(defStat * 0.5f);
             if (baseDamage < 1) baseDamage = 1;

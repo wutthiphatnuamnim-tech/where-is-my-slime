@@ -1,9 +1,10 @@
-﻿using How.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using How.Data;
+using How.Models;
 
-namespace How.Manager
+namespace How.Battle
 {
     public enum BattleState
     {
@@ -26,8 +27,8 @@ namespace How.Manager
         public BattleState State { get; private set; } = BattleState.Running;
 
         public bool IsHardStage { get; private set; }
-        public int RewardExp { get; private set; }   // Exp ที่พันธมิตรแต่ละคนจะได้รับถ้าชนะด่านนี้ (ปกติ 100, ด่านยาก 325)
-        public int RewardCoins { get; private set; } // Coin ที่จะได้รับถ้าชนะด่านนี้ (ปกติ 10, ด่านยาก 25)
+        public int RewardPoints { get; private set; } // แต้มอัพสเตตัสที่จะได้รับถ้าชนะด่านนี้ (ปกติ 5, ด่านยาก 10)
+        public int RewardCoins { get; private set; }   // Coin ที่จะได้รับถ้าชนะด่านนี้ (ปกติ 10, ด่านยาก 25)
 
         private readonly Random _rng = new Random();
         private const int MaxLogLines = 8;
@@ -56,7 +57,7 @@ namespace How.Manager
                 ally.Hp = ally.MaxHp; // ฮีลเต็มทุกครั้งที่เริ่มด่านใหม่
 
             IsHardStage = isHardStage;
-            RewardExp = isHardStage ? 325 : 100;
+            RewardPoints = isHardStage ? 10 : 5;
             RewardCoins = isHardStage ? 25 : 10;
 
             Enemies = CreateEnemies(isHardStage);

@@ -1,9 +1,8 @@
-﻿using How.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace How.Gameplay
+namespace How.Models
 {
     /// <summary>
     /// การ์ดหลังอัพสเตตัส: แต่ละใบให้ผลบวกพร้อมแลกกับผลลบ (trade-off) แบบเกม roguelite ทั่วไป
