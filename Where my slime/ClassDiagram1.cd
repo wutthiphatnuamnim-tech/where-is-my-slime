@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Where_My_Slime.FloatingText">
+    <Position X="3" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAIAAAAAAAAAAAAAAAAAiAAEAAA=</HashCode>
+      <FileName>Gameplay\Game1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Where_My_Slime.Game1" Collapsed="true">
+    <Position X="19.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAQlQEACAeAAi4EEQAAIIAAQ5QXAgAsioIAAhGAfRBQ=</HashCode>
+      <FileName>Gameplay\Game1.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Where_My_Slime.Models.UpgradeCard">
+    <Position X="11" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Gameplay\Upgrade.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Where_My_Slime.Models.UpgradeCardPool">
+    <Position X="13.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Gameplay\Upgrade.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Where_My_Slime.Data.CharacterDefinition">
+    <Position X="7.75" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AEACBAAAQAAAgQAAwgAIQAQDEIAAIAAAQRAAAEAA0AA=</HashCode>
+      <FileName>Data\Charaterindex.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Where_My_Slime.Data.CharacterIndex">
+    <Position X="12.75" Y="0.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAQAAAAAgAAAAAAAAAAAAAEAAIgAAAAAAAAAQAA=</HashCode>
+      <FileName>Data\Charaterindex.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Where_My_Slime.Models.Character" Collapsed="true">
+    <Position X="19.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BUAAgBAAQACCAQAAwqAqQgRDEIaKoEARRRABgEAG8oA=</HashCode>
+      <FileName>Data\Charater.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Where_My_Slime.Data.Item">
+    <Position X="10.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAUAgAAACAAAgAASAAQEAQAAAAAIgAIAAAAA=</HashCode>
+      <FileName>Data\item.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Where_My_Slime.Data.ItemPool">
+    <Position X="10.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\item.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Where_My_Slime.Manager.AudioManager">
+    <Position X="18" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAABAAAAAAAAAEAAAZAAAUBAAEAAAAAICAAAEAgQAE=</HashCode>
+      <FileName>Manager\Audiomanager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Where_My_Slime.Battle.BattleManager">
+    <Position X="16.25" Y="0.75" Width="1.5" />
+    <NestedTypes>
+      <Delegate Name="Where_My_Slime.Battle.BattleManager.HealResolvedEventHandler" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Manager\BattleManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>JQQCAAQAAQABAAAQIAABCEIAIAkICIIAAACEBgAAkAE=</HashCode>
+      <FileName>Manager\BattleManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Where_My_Slime.BattleScreen" Collapsed="true">
+    <Position X="12.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>vYU3RAzP4cpACvmuRxERdaHxfiHmlIfdJe96rO81cjY=</HashCode>
+      <FileName>Manager\BattleScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Where_My_Slime.Models.AttackResult" Collapsed="true">
+    <Position X="4.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAEAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Data\Charater.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="Where_My_Slime.AppState">
+    <Position X="2" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gEAgARAAABAAAAAAQAAgCAAQACCAAAAAgAAAgACAAAA=</HashCode>
+      <FileName>Gameplay\Game1.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Where_My_Slime.Models.AttackType">
+    <Position X="4" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\Charater.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Where_My_Slime.Models.GrowthStat">
+    <Position X="6.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAAAAAKIAAAAAAAAAAAAIgA=</HashCode>
+      <FileName>Data\Charater.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Where_My_Slime.Models.StatKind">
+    <Position X="6" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAABAAAAAAAQAAAAAIAAADAAAAIAAAQAAAAAAEEAA=</HashCode>
+      <FileName>Data\Charater.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Where_My_Slime.Data.ItemRarity">
+    <Position X="8" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAQAAAAAAAAAQAAAAAAAQgAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\item.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Where_My_Slime.Battle.BattleState">
+    <Position X="13" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAAAAEAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Manager\BattleManager.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Where_My_Slime.TeamSetupOrigin">
+    <Position X="4" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAAAAABAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Gameplay\Gamesession.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
